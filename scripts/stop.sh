@@ -6,7 +6,7 @@ if [ "$res" == "No kafka server to stop" ]; then
   echo "$res"
 else
   while [ "$(pgrep -f "kafka.Kafka" | wc -l)" -gt 0 ]; do
-    sleep 0.2
+    sleep 0.5
     echo "kafka stopping..."
   done
   echo "kafka stopped"
@@ -17,7 +17,7 @@ if [ "$res" == "No zookeeper server to stop" ]; then
   echo "$res"
 else
   while [ "$(pgrep -f org.apache.zookeeper.server.quorum.QuorumPeerMain | wc -l)" -gt 0 ]; do
-    sleep 0.2
+    sleep 0.5
     echo "zookeeper stopping..."
   done
   echo "zookeeper stopped"

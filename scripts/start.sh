@@ -1,6 +1,9 @@
 #!/bin/bash
 . config
 
+touch "$ZK_LOG"
+touch "$KAFKA_LOG"
+
 repeat=5
 
 nohup "$KAFKA_HOME"/bin/zookeeper-server-start.sh "$KAFKA_HOME"/config/zookeeper.properties >"$ZK_LOG" 2>&1 &

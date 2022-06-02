@@ -22,3 +22,7 @@ else
   done
   echo "zookeeper stopped"
 fi
+
+# remove log files because start.sh uses them to check booting status
+rm -f "$ZK_LOG"
+rm -f "$KAFKA_LOG"

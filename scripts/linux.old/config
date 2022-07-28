@@ -1,0 +1,11 @@
+KAFKA_HOME=/home/wy/projects/kafka/kafka_2.13-2.6.0
+ZK_HOME=/home/wy/projects/kafka/apache-zookeeper-3.7.0-bin
+#KAFKA_HOME=../../
+#ZK_HOME=../../../apache-zookeeper-3.7.0-bin
+
+kafka=127.0.0.1:9092
+
+sasl=false
+if [ $sasl =  true ]; then
+    export KAFKA_OPTS="-Djava.security.auth.login.config=$KAFKA_HOME/config/kafka_jaas.conf"
+fi

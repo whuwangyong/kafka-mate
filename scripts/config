@@ -1,4 +1,4 @@
-KAFKA_HOME=/home/wy/dev/kafka_2.13-2.6.0
+KAFKA_HOME=/home/wy/dev/kafka_2.13-3.2.1
 BOOTSTRAP_SERVER=127.0.0.1:9092
 ZK_LOG=/tmp/mate-zk.log
 KAFKA_LOG=/tmp/mate-kafka.log

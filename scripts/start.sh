@@ -21,7 +21,7 @@ while [ "$(grep -c 'Using checkIntervalMs=' "$ZK_LOG")" -eq 0 ]; do
 done
 echo "zookeeper started"
 
-repeat=5
+repeat=10
 nohup "$KAFKA_HOME"/bin/kafka-server-start.sh "$KAFKA_HOME"/config/server.properties >"$KAFKA_LOG" 2>&1 &
 while [ "$(grep -c 'started (kafka.server.KafkaServer)' "$KAFKA_LOG")" -eq 0 ]; do
   echo "waiting kafka starting..."

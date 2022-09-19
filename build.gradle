@@ -8,6 +8,13 @@ group = 'cn.whu.wy'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+// for lombok
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
     mavenCentral()
@@ -15,9 +22,15 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '2.6.0'
+    implementation 'org.apache.kafka:kafka-clients:3.2.1'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

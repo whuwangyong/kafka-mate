@@ -25,17 +25,21 @@ public class TopicControllerTest {
     public void test() {
         RestTemplate restTemplate = new RestTemplate();
 
-        Set<String> topics = new HashSet<>(100);
-        for (int i = 1; i <= 100; i++) {
+        final int totalTopics = 500;
+        Set<String> topics = new HashSet<>(totalTopics);
+        for (int i = 1; i <= totalTopics; i++) {
             topics.add("test-" + i);
         }
 
-        ResponseEntity<ResponseDto> response1 = restTemplate.exchange(SERVER + RequestPath.TOPIC, HttpMethod.DELETE, new HttpEntity<>(topics), ResponseDto.class);
-        log.info("delete topics response: {}", response1);
+        for (int times = 0; times < 30; times++) {
+            ResponseEntity<ResponseDto> response1 = restTemplate.exchange(SERVER + RequestPath.TOPIC, HttpMethod.DELETE,
+                    new HttpEntity<>(topics), ResponseDto.class);
+            log.info("delete topics response: {}", response1);
 
-        Set<TopicInfo> topicInfos = topics.stream().map(t -> new TopicInfo(t, 1, (short) 1))
-                .collect(Collectors.toSet());
-        ResponseEntity<ResponseDto> response2 = restTemplate.postForEntity(SERVER + RequestPath.TOPIC, topicInfos, ResponseDto.class);
-        log.info("create topics response: {}", response2);
+            Set<TopicInfo> topicInfos = topics.stream().map(t -> new TopicInfo(t, 2, (short) 1))
+                    .collect(Collectors.toSet());
+            ResponseEntity<ResponseDto> response2 = restTemplate.postForEntity(SERVER + RequestPath.TOPIC, topicInfos, ResponseDto.class);
+            log.info("create topics response: {}", response2);
+        }
     }
 }

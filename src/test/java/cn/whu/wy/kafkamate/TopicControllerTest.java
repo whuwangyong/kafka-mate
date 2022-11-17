@@ -31,7 +31,7 @@ public class TopicControllerTest {
             topics.add("test-" + i);
         }
 
-        for (int times = 0; times < 30; times++) {
+        for (int times = 0; times < 10; times++) {
             ResponseEntity<ResponseDto> response1 = restTemplate.exchange(SERVER + RequestPath.TOPIC, HttpMethod.DELETE,
                     new HttpEntity<>(topics), ResponseDto.class);
             log.info("delete topics response: {}", response1);

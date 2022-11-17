@@ -65,7 +65,7 @@ public class KafkaTxTest implements InitializingBean {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try (Consumer<String, String> consumer = genRuncConsumer("runc-consumer")) {
-                consumer.subscribe(Collections.singleton("test-tx"));
+                consumer.subscribe(Collections.singleton(testTopic));
                 while (true) {
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
                     records.forEach(r -> log.info("consumer[read_uncommitted] received: {}", r.value()));
@@ -80,8 +80,8 @@ public class KafkaTxTest implements InitializingBean {
             try (Producer<String, String> producer = genProducer()) {
                 for (int i = 0; i < 10; i++) {
                     producer.send(new ProducerRecord<>(testTopic, "msg-" + i));
-                    TimeUnit.SECONDS.sleep(1);
                     log.info("[nontx-producer]sent msg-" + i);
+                    TimeUnit.SECONDS.sleep(1);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -205,6 +205,7 @@ public class KafkaTxTest implements InitializingBean {
         props.setProperty("group.id", gid);
         props.setProperty("enable.auto.commit", "true");
         props.setProperty("auto.commit.interval.ms", "1000");
+        props.setProperty("auto.offset.reset", "earliest");
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         return new KafkaConsumer<>(props);
@@ -216,6 +217,7 @@ public class KafkaTxTest implements InitializingBean {
         props.setProperty("group.id", gid);
         props.setProperty("enable.auto.commit", "true");
         props.setProperty("auto.commit.interval.ms", "1000");
+        props.setProperty("auto.offset.reset", "earliest");
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.setProperty(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");

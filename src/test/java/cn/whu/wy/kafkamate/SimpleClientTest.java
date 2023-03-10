@@ -7,7 +7,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -21,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 //@SpringBootTest
 @Slf4j
 public class SimpleClientTest {
-    private static final String SERVER = "192.168.191.128:9092";
+    private static final String SERVER = "192.168.46.128:9092";
 
     @Test
     public void test() {

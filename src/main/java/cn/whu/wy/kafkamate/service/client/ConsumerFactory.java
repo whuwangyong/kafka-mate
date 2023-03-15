@@ -1,12 +1,16 @@
 package cn.whu.wy.kafkamate.service.client;
 
 import cn.whu.wy.kafkamate.KafkaMateProperties;
+import cn.whu.wy.kafkamate.service.Utils;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.IsolationLevel;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -32,25 +36,28 @@ public class ConsumerFactory extends BaseFactory {
         parseSerializerTopicConfig(valueDeserializerTopicMap, SerializerType.VALUE_DESERIALIZER);
     }
 
-    public <K, V> Consumer<K, V> getConsumer(String topic, Properties props) {
-        props.setProperty("bootstrap.servers", kafkaMateProperties.getServers());
-        props.setProperty("key.deserializer", getSerializer(topic, keyDeserializerTopicMap));
-        props.setProperty("value.deserializer", getSerializer(topic, valueDeserializerTopicMap));
+    public <K, V> Consumer<K, V> getConsumer(String topic, IsolationLevel isolationLevel) {
+        Properties props = new Properties();
+        props.setProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, kafkaMateProperties.getServers());
+        props.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, getSerializer(topic, keyDeserializerTopicMap));
+        props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, getSerializer(topic, valueDeserializerTopicMap));
+        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "gid_" + Utils.getTimestamp());
+        props.setProperty(ConsumerConfig.ISOLATION_LEVEL_CONFIG, isolationLevel.toString().toLowerCase(Locale.ROOT));
         return new KafkaConsumer<>(props);
     }
 
-    public <K, V> Consumer<K, V> getConsumer(String topic, String groupId, boolean readCommitted) {
-        Properties props = new Properties();
-        props.setProperty("bootstrap.servers", kafkaMateProperties.getServers());
-        props.setProperty("key.deserializer", getSerializer(topic, keyDeserializerTopicMap));
-        props.setProperty("value.deserializer", getSerializer(topic, valueDeserializerTopicMap));
-        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        if (readCommitted) {
-            props.setProperty(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
-        } else {
-            props.setProperty(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_uncommitted");
+
+    /**
+     * 使用什么序列化类，以及是否消费未提交的消息，决定了该消费者的类型
+     */
+    static class ConsumerType {
+        String serializer;
+        IsolationLevel isolationLevel;
+
+        public ConsumerType(String serializer, IsolationLevel isolationLevel) {
+            this.serializer = serializer;
+            this.isolationLevel = isolationLevel;
         }
-        return new KafkaConsumer<>(props);
     }
 
 

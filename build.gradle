@@ -38,3 +38,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// Skips tests if you provide prod project property from command line
+test.onlyIf { project.hasProperty('prod') }
+// gradle build -Pprod -i

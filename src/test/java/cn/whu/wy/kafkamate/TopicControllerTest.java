@@ -1,8 +1,8 @@
 package cn.whu.wy.kafkamate;
 
 import cn.whu.wy.kafkamate.bean.TopicInfo;
-import cn.whu.wy.kafkamate.dto.response.ResponseDto;
 import cn.whu.wy.kafkamate.restapi.RequestPath;
+import cn.whu.wy.kafkamate.restapi.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

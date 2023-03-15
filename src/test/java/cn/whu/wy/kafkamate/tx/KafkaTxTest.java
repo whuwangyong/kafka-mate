@@ -1,6 +1,7 @@
-package cn.whu.wy.kafkamate.service;
+package cn.whu.wy.kafkamate.tx;
 
 import cn.whu.wy.kafkamate.bean.TopicInfo;
+import cn.whu.wy.kafkamate.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -13,15 +14,14 @@ import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.OutOfOrderSequenceException;
 import org.apache.kafka.common.errors.ProducerFencedException;
-import org.springframework.beans.factory.InitializingBean;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -32,25 +32,26 @@ import java.util.concurrent.TimeUnit;
  * Date 2022/11/16
  * Time 14:05
  */
-@Service
+@SpringBootTest
 @Slf4j
-public class KafkaTxTest implements InitializingBean {
+public class KafkaTxTest {
 
     private final String bootstrapServers = "192.168.136.128:9092";
 
     @Autowired
-    private TopicManager topicManager;
+    private TopicService topicService;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-//        test();
+    @Test
+    public void f() throws Exception {
+        test();
+        TimeUnit.MINUTES.sleep(30);
     }
 
     void test() throws Exception {
         final String testTopic = "test-tx";
 
         TopicInfo topicInfo = new TopicInfo(testTopic, 1, (short) 1);
-        topicManager.createTopics(Set.of(topicInfo));
+        topicService.createTopics(Set.of(topicInfo));
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try (Consumer<String, String> consumer = genRcConsumer("rc-consumer")) {

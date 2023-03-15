@@ -1,4 +1,4 @@
-package cn.whu.wy.kafkamate.dto.response;
+package cn.whu.wy.kafkamate.restapi;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

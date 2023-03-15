@@ -3,6 +3,7 @@ package cn.whu.wy.kafkamate.service.client;
 import cn.whu.wy.kafkamate.KafkaMateProperties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -32,20 +33,32 @@ public class ProducerFactory extends BaseFactory {
     }
 
     public <K, V> Producer<K, V> getProducer(String topic) {
+        Properties props = baseProperties(topic);
+        return new KafkaProducer<>(props);
+    }
+
+    public <K, V> Producer<K, V> getProducer(String topic, String txId, int txTimeoutMs) {
+        Properties props = baseProperties(topic);
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, txId);
+        props.put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, txTimeoutMs);
+        return new KafkaProducer<>(props);
+    }
+
+    public <K, V> Producer<K, V> getProducer(String topic, Properties props) {
+        Properties baseProperties = baseProperties(topic);
+        for (Object key : props.keySet()) {
+            baseProperties.put(key, props.get(key));
+        }
+        return new KafkaProducer<>(props);
+    }
+
+    private Properties baseProperties(String topic) {
         Properties props = new Properties();
         props.put("bootstrap.servers", kafkaMateProperties.getServers());
         props.put("linger.ms", 1);
         props.put("key.serializer", getSerializer(topic, keySerializerTopicMap));
         props.put("value.serializer", getSerializer(topic, valueSerializerTopicMap));
-        return new KafkaProducer<>(props);
-    }
-
-    public <K, V> Producer<K, V> getProducer(String topic, Properties props) {
-        props.put("bootstrap.servers", kafkaMateProperties.getServers());
-        props.put("linger.ms", 1);
-        props.put("key.serializer", getSerializer(topic, keySerializerTopicMap));
-        props.put("value.serializer", getSerializer(topic, valueSerializerTopicMap));
-        return new KafkaProducer<>(props);
+        return props;
     }
 
 

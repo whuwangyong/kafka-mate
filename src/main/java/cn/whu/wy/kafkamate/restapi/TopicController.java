@@ -1,8 +1,7 @@
 package cn.whu.wy.kafkamate.restapi;
 
 import cn.whu.wy.kafkamate.bean.TopicInfo;
-import cn.whu.wy.kafkamate.dto.response.ResponseDto;
-import cn.whu.wy.kafkamate.service.TopicManager;
+import cn.whu.wy.kafkamate.service.TopicService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -12,16 +11,16 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping(RequestPath.TOPIC)
 public class TopicController {
 
-    private final TopicManager topicManager;
+    private final TopicService topicService;
 
-    public TopicController(TopicManager topicManager) {
-        this.topicManager = topicManager;
+    public TopicController(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     @PostMapping
     public ResponseDto createTopics(@RequestBody Set<TopicInfo> topicInfos) {
         try {
-            Object result = topicManager.createTopics(topicInfos);
+            Object result = topicService.createTopics(topicInfos);
             return ResponseDto.success(result);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -32,7 +31,7 @@ public class TopicController {
     @DeleteMapping
     public ResponseDto deleteTopics(@RequestBody Set<String> topics) {
         try {
-            topicManager.deleteTopics(topics);
+            topicService.deleteTopics(topics);
             return ResponseDto.success("");
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();

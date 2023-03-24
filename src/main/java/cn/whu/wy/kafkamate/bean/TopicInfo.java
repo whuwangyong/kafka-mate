@@ -1,19 +1,31 @@
 package cn.whu.wy.kafkamate.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class TopicInfo {
     String name;
     int numPartitions;
     short replicationFactor;
+    Map<String, String> configs;
 
+
+    public TopicInfo() {
+    }
+
+    public TopicInfo(String name, int numPartitions, short replicationFactor) {
+        this.name = name;
+        this.numPartitions = numPartitions;
+        this.replicationFactor = replicationFactor;
+    }
+
+    public TopicInfo configs(Map<String, String> configs) {
+        this.configs = configs;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
